@@ -44,7 +44,7 @@ func New() *API {
 	{
 		grp1.POST("/transaction", a.Post)
 		grp1.GET("/getBalance", a.GET)
-		grp1.GET("/getHistory", a.GetBalance)
+		grp1.GET("/getHistory", a.GetHistory)
 	}
 
 	a.router = r
@@ -78,7 +78,7 @@ func (a *API) Post(c *gin.Context) {
 	}
 
 	a.lock.Lock()
-	defer a.lock.Lock()
+	defer a.lock.Unlock()
 
 	switch req.Type {
 	case "d":
@@ -115,7 +115,7 @@ func (a *API) GET(c *gin.Context) {
 	})
 }
 
-func (a *API) GetBalance(c *gin.Context) {
+func (a *API) GetHistory(c *gin.Context) {
 	a.lock.Lock()
 	defer a.lock.Unlock()
 	c.JSONP(http.StatusOK, a.history)
